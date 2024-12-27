@@ -1,0 +1,102 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/gnzsnz/ib-gateway
+  pullPolicy: IfNotPresent
+  tag: "10.33.1c"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: "ib-gateway"
+
+podAnnotations: {}
+podLabels: {}
+podEnvVars: 
+  TWS_USERID: <replace>
+  TWS_PASSWORD: <replace>
+  TRADING_MODE: paper
+  # TWS_SETTINGS_PATH: ${TWS_SETTINGS_PATH:-}
+  TWS_ACCEPT_INCOMING: accept
+  READ_ONLY_API: "no"
+  # VNC_SERVER_PASSWORD: ${VNC_SERVER_PASSWORD:-}
+  TWOFA_TIMEOUT_ACTION: exit
+  BYPASS_WARNING: "yes"
+  AUTO_RESTART_TIME: "02:00"
+  # AUTO_LOGOFF_TIME: ${AUTO_LOGOFF_TIME:-}
+  # TWS_COLD_RESTART: ${TWS_COLD_RESTART:-}
+  # SAVE_TWS_SETTINGS: ${SAVE_TWS_SETTINGS:-}
+  RELOGIN_AFTER_TWOFA_TIMEOUT: "no"
+  TWOFA_EXIT_INTERVAL: 60
+  # TWOFA_DEVICE: ${TWOFA_DEVICE:-}
+  EXISTING_SESSION_DETECTED_ACTION: primary
+  ALLOW_BLIND_TRADING: "no"
+  TIME_ZONE: Etc/UTC
+  TZ: "Europe/Dublin"
+  CUSTOM_CONFIG: "no"
+  JAVA_HEAP_SIZE: 1024
+  # SSH_TUNNEL: ${SSH_TUNNEL:-}
+  # SSH_OPTIONS: ${SSH_OPTIONS:-}
+  # SSH_ALIVE_INTERVAL: ${SSH_ALIVE_INTERVAL:-}
+  # SSH_ALIVE_COUNT: ${SSH_ALIVE_COUNT:-}
+  # SSH_PASSPHRASE: ${SSH_PASSPHRASE:-}
+  # SSH_REMOTE_PORT: ${SSH_REMOTE_PORT:-}
+  # SSH_USER_TUNNEL: ${SSH_USER_TUNNEL:-}
+  # SSH_RESTART: ${SSH_RESTART:-}
+  # SSH_VNC_PORT: ${SSH_VNC_PORT:-}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: 
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: ib-gateway.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  
+livenessProbe: 
+  httpGet:
+    path: /
+    port: http
+readinessProbe:  
+  httpGet:
+    path: /
+    port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+volumes: []
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

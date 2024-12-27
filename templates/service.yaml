@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ib-gateway-docker-helm.fullname" . }}
+  labels:
+    {{- include "ib-gateway-docker-helm.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+    {{- if eq .Values.podEnvVars.TRADING_MODE "paper" }}
+    - port: 4004
+      targetPort: paper-mode-port
+      protocol: TCP
+      name: paper-mode-port
+    {{- end }}
+    {{- if eq .Values.podEnvVars.TRADING_MODE "live" }}
+    - port: 4003
+      targetPort: live-mode-port
+      protocol: TCP
+      name: live-mode-port
+    {{- end }}
+  selector:
+    {{- include "ib-gateway-docker-helm.selectorLabels" . | nindent 4 }}
