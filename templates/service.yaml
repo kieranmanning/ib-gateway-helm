@@ -8,14 +8,16 @@ spec:
   type: NodePort
   ports:
     {{- if eq .Values.podEnvVars.TRADING_MODE "paper" }}
-    - port: 4004
-      targetPort: paper-mode-port
+    - targetPort: 4004
+      port: 4004
+      nodePort: 30004
       protocol: TCP
       name: paper-mode-port
     {{- end }}
     {{- if eq .Values.podEnvVars.TRADING_MODE "live" }}
-    - port: 4003
-      targetPort: live-mode-port
+    - targetPort: 4003
+      port: 4003
+      nodePort: 30003
       protocol: TCP
       name: live-mode-port
     {{- end }}

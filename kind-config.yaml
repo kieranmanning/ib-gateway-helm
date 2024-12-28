@@ -4,10 +4,10 @@ nodes:
 - role: control-plane
   extraPortMappings:
   - containerPort: 4003
-    hostPort: 4003
+    hostPort: 30003
     listenAddress: "0.0.0.0"
     protocol: tcp
   - containerPort: 4004
-    hostPort: 4004
+    hostPort: 30004
     listenAddress: "0.0.0.0"
     protocol: tcp
